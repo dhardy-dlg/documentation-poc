@@ -1,0 +1,38 @@
+name: deploy-docusaurus
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+  workflow_dispatch:
+
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: doc-website/package-lock.json
+
+      - name: Build Docusaurus website
+        run: |
+          cd doc-website
+          npm ci 
+          npm run build
+      - name: Deploy to GitHub Pages
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: gh-pages
+          build_dir: doc-website/build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

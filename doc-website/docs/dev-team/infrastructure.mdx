@@ -1,0 +1,70 @@
+---
+title: Infrastructure
+description: Cloud infrastructure
+---
+import myImageUrl from './img/aws.gif';
+
+# Infrastructure
+
+
+**Overview**
+-----------------
+
+This document provides an overview of the cloud infrastructure used by [Your Company Name] for hosting [Application/Service Name]. The infrastructure is built using Amazon Web Services (AWS) and deployed using AWS CDK in TypeScript.
+
+<p align="center">
+  <img src={myImageUrl} alt="Exemple de bannière" />;
+</p>
+
+**Components**
+---------------
+
+### **Storage**
+
+* **S3 Buckets**: Two S3 buckets are used to store static assets and data.
+	+ `asset-bucket`: Used for storing static assets such as images, videos, and documents. This bucket is configured with a lifecycle policy to automatically delete expired objects after 30 days.
+	+ `data-bucket`: Used for storing structured data such as databases and logs. This bucket is configured with a server-side encryption (SSE) using AWS Key Management Service (KMS).
+
+### **Compute**
+
+* **EC2 Instances**: Not used in this architecture.
+
+### **Networking**
+
+* **VPC**: A VPC is created to define the virtual network for our infrastructure.
+	+ The VPC has two subnets: `subnet1` and `subnet2`.
+* **Security Groups**: Two security groups are used to control incoming and outgoing traffic:
+	+ `sg-asset`: Allows HTTP/HTTPS traffic from the internet to the asset bucket.
+	+ `sg-data`: Allows internal communication between services and data access from the VPC.
+
+### **Deployments**
+
+* **AWS CDK**: The infrastructure is deployed using AWS CDK in TypeScript. The `app.ts` file contains the main application code, which includes the definitions for all resources such as S3 buckets, subnets, security groups, etc.
+* **CloudFormation Stack**: An AWS CloudFormation stack is created to manage the deployment and updates of the infrastructure.
+
+**Security Considerations**
+---------------------------
+
+### **Access Control**
+
+* **IAM Roles**: Two IAM roles are used to control access to the resources:
+	+ `asset-role`: Used for accessing the asset bucket.
+	+ `data-role`: Used for accessing the data bucket.
+* **Key Management Service (KMS)**: KMS is used to encrypt and decrypt data stored in S3.
+
+### **Network Security**
+
+* **Firewall Rules**: Firewalls rules are set up to restrict incoming traffic to only necessary ports.
+
+**Best Practices**
+-----------------
+
+### **Backup and Recovery**
+
+* Regular backups are taken of all resources using AWS Backup.
+* Disaster recovery procedures are implemented to quickly recover from failures.
+
+### **Monitoring**
+
+* Monitoring is set up for key metrics such as CPU usage, disk space utilization, etc.
+* Alerts are triggered when thresholds are exceeded or unusual activity is detected.
